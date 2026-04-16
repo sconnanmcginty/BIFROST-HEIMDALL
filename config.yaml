@@ -1,0 +1,188 @@
+# ------------------------------------------------------------
+# TIME CONFIGURATION
+#
+# Two options:
+#
+# (A) Regular time axis:
+#       use_custom: false
+#       start, end, resolution_minutes required
+#
+# (B) Explicit timestamp list (e.g., instrument times):
+#       use_custom: true
+#       timestamps: [list of datetime strings]
+# ------------------------------------------------------------
+time:
+  # Set true to use explicit timestamps instead of regular spacing
+  use_custom: false
+
+  # --- Option A: Regular time grid ---
+  start: "2018-01-02 12:00:00"
+  end:   "2018-01-02 13:00:00"
+  resolution_minutes: 60
+
+  # --- Option B: Explicit timestamp list (used only when use_custom = true) ---
+  timestamps:
+    # Example values (one line for each datetime to simulate - example below):
+    # - "2025-03-01 10:03:00"
+    # - "2025-03-01 10:03:30"
+    # - "2025-03-01 10:04:00"
+    # - "2025-03-01 10:04:30"
+
+
+# ------------------------------------------------------------
+# LOCATION CONFIGURATION
+#
+# Two ways to specify model locations:
+#
+# (A) Explicit list of lat/lon points
+# (B) Automatically generated spatial grid
+#
+# The model will:
+#   - Use the spatial grid when use_grid = true
+#   - Otherwise fall back to the explicit locations list
+# ------------------------------------------------------------
+
+# --- OPTION A: Explicit location list ---
+locations:
+  - latitude: 85.0
+    longitude: 20.0
+
+  # Additional example entries:
+  # - latitude: 57.2
+  #   longitude: -2.8
+  # - latitude: 55.8
+  #   longitude: -4.1
+
+
+# --- OPTION B: Automatically generated spatial grid ---
+spatial_grid:
+  use_grid: false    # Set to true to activate grid mode
+
+  # Latitude range (degrees)
+  lat_start: 40.0
+  lat_end:   60.0
+  lat_step:  2     # spatial resolution in degrees
+
+  # Longitude range (degrees)
+  lon_start: 0.0
+  lon_end:   0.0
+  lon_step:   2   # spatial resolution in degrees
+
+
+
+# ------------------------------------------------------------
+# CLOUD MODE
+#
+#   0 → Clear sky (cloud = 0)
+#   1 → Overcast sky (cloud = 1)
+#   2 → Satellite-driven cloud data (see satellite_cloud section)
+# ------------------------------------------------------------
+cloud_mode: 0
+
+
+
+# ------------------------------------------------------------
+# CDS CLOUD DATA (used when cloud_mode = 2)
+#
+# When cloud_mode = 2, the model automatically downloads ERA5
+# total cloud cover from the Copernicus Climate Data Store (CDS)
+# for the spatial/temporal domain defined above.
+#
+# No additional configuration is needed here — the spatial and
+# time settings above fully define the download request.
+#
+# A .cdsapirc credentials file must be present in your home
+# directory before running. See CDS_SETUP.md for instructions.
+#
+# ------------------------------------------------------------
+
+
+
+# ------------------------------------------------------------
+# ATMOSPHERIC SETTINGS
+#
+# These are passed directly into solar/lunar zenith computations.
+# Setting both to 0 will disable atmospheric refraction.
+# ------------------------------------------------------------
+atmosphere:
+  temperature_C: 0
+  pressure_mbar: 0
+
+
+
+# ------------------------------------------------------------
+# MODEL OUTPUT MODE
+#
+# Three levels of output are available. Set the options below
+# to select what the model computes:
+#
+#   LEVEL 1 — Above-surface irradiance only
+#     above_surface_only: true
+#     (depth section not required)
+#     Outputs solar and lunar spectral irradiance, PAR, and
+#     broadband irradiance above the surface.
+#
+#   LEVEL 2 — Irradiance entering the water (e.g. melt pond analysis)
+#     above_surface_only: false
+#     compute_depth_profile: false
+#     Adds BIFROST transmission through snow, ice, and open water.
+#     Outputs the irradiance field just below the surface boundary.
+#     Requires Copernicus Marine credentials.
+#     See COPERNICUS_MARINE_SETUP.md.
+#
+#   LEVEL 3 — Full water column depth profile
+#     above_surface_only: false
+#     compute_depth_profile: true
+#     Adds Beer-Lambert depth attenuation through the water column
+#     (Kostakis et al. 2020 bio-optical model) on top of Level 2.
+#     Requires depth, chlorophyll, and salinity settings below.
+#     Requires Copernicus Marine credentials.
+#     See COPERNICUS_MARINE_SETUP.md.
+#
+# OPEN WATER MODE (Levels 2 and 3 only)
+#   open_water_only: true
+#     Skips sea ice data download and applies open water Fresnel
+#     transmission only (sea ice concentration = 0 everywhere).
+#     Useful for testing or ice-free ocean simulations.
+#     Does NOT require Copernicus Marine credentials.
+#   open_water_only: false  (default)
+#     Full BIFROST transmission using TOPAZ4 sea ice data.
+#     Requires Copernicus Marine credentials.
+# ------------------------------------------------------------
+above_surface_only: false
+open_water_only: true
+
+
+
+# ------------------------------------------------------------
+# DEPTH ATTENUATION SETTINGS
+#
+# Used when compute_depth_profile = true (Level 3 only).
+#
+# depth_resolution_m : layer thickness in metres
+# max_depth          : bottom boundary in metres
+#
+# chlorophyll : mg m⁻³ — single value (homogeneous column) or
+#               list with one entry per depth layer
+# salinity    : PSU    — single value (homogeneous column) or
+#               list with one entry per depth layer
+#
+# If chlorophyll or salinity are lists, their length must equal
+# max_depth / depth_resolution_m.
+# ------------------------------------------------------------
+depth:
+  compute_depth_profile: true
+  max_depth: 3
+  depth_resolution_m: 1
+  chlorophyll: 0.5
+  # Example non-homogeneous list:
+  # chlorophyll:
+  #   - 0.8
+  #   - 0.6
+  #   - 0.5
+  salinity: 34.0
+  # Example non-homogeneous list:
+  # salinity:
+  #   - 34.6
+  #   - 34.2
+  #   - 34.7
