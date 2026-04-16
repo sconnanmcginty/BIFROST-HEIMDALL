@@ -25,21 +25,6 @@ You will be prompted for your username and password. Your credentials are then
 saved to `~/.copernicusmarine/.copernicusmarine-credentials` and reused
 automatically on all future runs — you do not need to log in again.
 
----
-
-## 3. Install the Copernicus Marine Package
-
-With your HEIMDALL virtual environment active, run:
-
-```bash
-pip install copernicusmarine
-```
-
-Or install all dependencies at once:
-
-```bash
-pip install -r requirements.txt
-```
 
 ---
 
