@@ -224,13 +224,13 @@ Same variables prefixed with `underwater_` with shape (L, T, Z, W) for spectral 
 ### HEIMDALL
 - **Solar/lunar geometry:** Skyfield (DE421 ephemeris), topocentric zenith angles with optional atmospheric refraction
 - **Irradiance LUTs:** Spectrally resolved direct and diffuse irradiance as a function of zenith angle and cloud cover
-- **Lunar scaling:** Solar irradiance scaled by lunar albedo, phase function (Miller & Turner 2009), and solid angle
+- **Lunar scaling:** Solar irradiance scaled by lunar albedo, phase function and solid angle
 - **Cloud cover data:** ERA5 total cloud cover (reanalysis-era5-single-levels) from Copernicus Climate Data Store
 - **Open water transmission:** Fresnel reflection for direct radiation (zenith-dependent); fixed 2.88% diffuse reflectance
-- **Water column attenuation:** Beer-Lambert with Kostakis et al. (2020) Barents Sea bio-optical model; absorption from water, phytoplankton, CDOM, and NAP; direct and diffuse kept separate using Snell's law refraction (n = 1.34)
+- **Water column attenuation:** Beer-Lambert with a Barents Sea bio-optical model; absorption from water, phytoplankton, CDOM, and NAP; direct and diffuse kept separate using Snell's law refraction (n = 1.34)
 
 ### BIFROST (extension)
-- **Sea ice transmission:** Beer-Lambert through snow (if present) and ice; FYI/MYI distinguished at 2.33 m thickness threshold (Melling 2022)
+- **Sea ice transmission:** Beer-Lambert through snow (if present) and ice; FYI/MYI distinguished at 2.33 m thickness threshold
 - **Surface weighting:** T = (1 − SIC) × T_open_water + SIC × T_ice
 - **Sea ice data:** TOPAZ4 daily reanalysis (ARCTIC_MULTIYEAR_PHY_002_003) from Copernicus Marine
 
@@ -239,6 +239,3 @@ Same variables prefixed with `underwater_` with shape (L, T, Z, W) for spectral 
 ## References
 
 - **HEIMDALL:** Midnight Sun to Polar Night: A Model of Seasonal Light in the Barents Sea. https://doi.org/10.1029/2022MS003198
-- Miller & Turner (2009) — lunar phase convention
-- Melling (2022) — FYI/MYI thickness threshold (2.33 m)
-- Kostakis et al. (2020) — Barents Sea bio-optical model
